@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Trait</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    label { display: block; margin-top: 10px; }
+    .bonus-rule { border: 1px solid #ccc; padding: 10px; margin-top: 10px; }
+    button { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Add New Trait</h1>
+
+  <form id="traitForm">
+    <label>Name:
+      <input type="text" id="name" required>
+    </label>
+
+    <label>Description:
+      <textarea id="description"></textarea>
+    </label>
+
+    <h2>Bonus Rules</h2>
+    <div id="bonusRulesContainer"></div>
+    <button type="button" id="addBonusRuleBtn">Add Bonus Rule</button>
+
+    <br><br>
+    <button type="submit">Save Trait</button>
+  </form>
+
+  <script type="module" src="./add-trait.js"></script>
+</body>
+</html>
