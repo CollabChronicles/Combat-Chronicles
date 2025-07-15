@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Add Trait (Admin Only)</title>
+  <title>Admin Entry Tool</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     label { display: block; margin-top: 10px; }
@@ -21,7 +21,7 @@
   </style>
 </head>
 <body>
-  <h1>Add New Trait</h1>
+  <h1>Admin Content Entry (Traits / Species / Occupations)</h1>
 
   <!-- Login form -->
   <form id="loginForm">
@@ -39,24 +39,19 @@
   <!-- Access denied message -->
   <div id="accessDenied">Access denied. You do not have permission to view this page.</div>
 
-  <!-- Trait form (hidden by default) -->
-  <form id="traitForm" style="display:none;">
-    <label>Name:
-      <input type="text" id="name" required>
-    </label>
+  <!-- Admin section -->
+  <div id="adminSection" style="display:none;">
+    <label for="entryType">What do you want to add?</label>
+    <select id="entryType">
+      <option value="trait">Trait</option>
+      <option value="species">Species</option>
+      <option value="occupation">Occupation</option>
+    </select>
 
-    <label>Description:
-      <textarea id="description"></textarea>
-    </label>
+    <div id="formContainer"></div>
+    <button id="submitBtn">Submit Entry</button>
+  </div>
 
-    <h2>Bonus Rules</h2>
-    <div id="bonusRulesContainer"></div>
-    <button type="button" id="addBonusRuleBtn">Add Bonus Rule</button>
-
-    <br><br>
-    <button type="submit">Save Trait</button>
-  </form>
-
-  <script type="module" src="./add-trait.js"></script>
+  <script type="module" src="./admin-page.js"></script>
 </body>
 </html>
