@@ -2,7 +2,7 @@ import { db } from "./firebase-config.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
-const YOUR_EMAIL = "your.email@example.com"; // <-- put your admin email here
+const YOUR_EMAIL = "collabchroniclesproject@gmail.com"; // <-- put your admin email here
 
 // Elements
 const loginForm = document.getElementById("loginForm");
