@@ -1,11 +1,70 @@
 import { db } from "./firebase-config.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+const YOUR_EMAIL = "your.email@example.com"; // <-- put your admin email here
+
+// Elements
+const loginForm = document.getElementById("loginForm");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const logoutBtn = document.getElementById("logoutBtn");
+const accessDenied = document.getElementById("accessDenied");
 
 const form = document.getElementById("traitForm");
 const bonusRulesContainer = document.getElementById("bonusRulesContainer");
 const addBonusRuleBtn = document.getElementById("addBonusRuleBtn");
 
 let bonusRuleCount = 0;
+
+const auth = getAuth();
+
+// Authentication UI logic -------------------------------------
+
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = emailInput.value;
+  const password = passwordInput.value;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    alert("Login failed: " + error.message);
+  }
+});
+
+logoutBtn.addEventListener("click", () => {
+  signOut(auth);
+});
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    if (user.email === YOUR_EMAIL) {
+      // Authorized
+      form.style.display = "block";
+      loginForm.style.display = "none";
+      logoutBtn.style.display = "inline-block";
+      accessDenied.style.display = "none";
+      addBonusRuleBtn.disabled = false;
+    } else {
+      // Unauthorized user - sign them out immediately
+      form.style.display = "none";
+      loginForm.style.display = "none";
+      logoutBtn.style.display = "inline-block";
+      accessDenied.style.display = "block";
+      addBonusRuleBtn.disabled = true;
+      signOut(auth);
+    }
+  } else {
+    // Not logged in
+    form.style.display = "none";
+    loginForm.style.display = "block";
+    logoutBtn.style.display = "none";
+    accessDenied.style.display = "none";
+    addBonusRuleBtn.disabled = true;
+  }
+});
+
+// Trait form logic ---------------------------------------------
 
 addBonusRuleBtn.addEventListener("click", addBonusRule);
 form.addEventListener("submit", saveTrait);
@@ -84,4 +143,3 @@ function csvToArray(str) {
 function nullIfEmpty(str) {
   return str.trim() === "" ? null : str.trim();
 }
-
