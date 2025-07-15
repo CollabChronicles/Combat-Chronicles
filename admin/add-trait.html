@@ -2,18 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Add Trait</title>
+  <title>Add Trait (Admin Only)</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     label { display: block; margin-top: 10px; }
     .bonus-rule { border: 1px solid #ccc; padding: 10px; margin-top: 10px; }
     button { margin-top: 10px; }
+    #logoutBtn {
+      display: none;
+      margin-top: 20px;
+    }
+    #accessDenied {
+      display: none;
+      color: red;
+      margin-top: 20px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h1>Add New Trait</h1>
 
-  <form id="traitForm">
+  <!-- Login form -->
+  <form id="loginForm">
+    <label>Email:
+      <input type="email" id="email" required>
+    </label>
+    <label>Password:
+      <input type="password" id="password" required>
+    </label>
+    <button type="submit">Login</button>
+  </form>
+
+  <button id="logoutBtn">Logout</button>
+
+  <!-- Access denied message -->
+  <div id="accessDenied">Access denied. You do not have permission to view this page.</div>
+
+  <!-- Trait form (hidden by default) -->
+  <form id="traitForm" style="display:none;">
     <label>Name:
       <input type="text" id="name" required>
     </label>
