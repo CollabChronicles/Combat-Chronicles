@@ -2,22 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Combat Chronicles</title>
+  <title>Combat Chronicles - Home</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    header {
+      margin-bottom: 20px;
+    }
+    nav a {
+      margin-right: 15px;
+      text-decoration: none;
+      color: blue;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 700px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Combat Chronicles</h1>
-  <div id="authSection">
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-    <button id="loginBtn">Log In</button>
-    <button id="logoutBtn" style="display:none;">Log Out</button>
-  </div>
+  <header>
+    <h1>Combat Chronicles</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="character-options.html">Character Options</a>
+      <a href="play.html">Play</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
 
-  <div id="userInfo" style="display:none;">
-    <p>Welcome, <span id="userEmail"></span>!</p>
-  </div>
-
-  <script type="module" src="./main.js"></script>
+  <main>
+    <h2>Welcome to Combat Chronicles!</h2>
+    <p>
+      Dive into a glorious mess of creative chaos where sentient pasta can beat ancient dragons,
+      slippery goblins can steal crowns, and clumsy diplomats might still persuade their way to victory.
+    </p>
+    <p>
+      This isn't meant to be the most balanced game (yet). It's about having fun with bizarre
+      combinations, weird traits, and unlikely victories. Build your character, enter the fray,
+      and see how far your chaotic genius can take you!
+    </p>
+    <p>
+      Use the links above to explore your options, start a match, or manage your profile.
+    </p>
+  </main>
 </body>
 </html>
