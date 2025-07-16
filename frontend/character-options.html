@@ -85,12 +85,12 @@ const searchBar = document.getElementById("searchBar");
 
 const cache = {
   species: null,
-  occupations: null,
+  occupation: null,
   traits: null,
 };
 
 document.getElementById("speciesTab").addEventListener("click", () => setCategory("species"));
-document.getElementById("occupationsTab").addEventListener("click", () => setCategory("occupations"));
+document.getElementById("occupationsTab").addEventListener("click", () => setCategory("occupation"));
 document.getElementById("traitsTab").addEventListener("click", () => setCategory("traits"));
 searchBar.addEventListener("input", renderResults);
 
