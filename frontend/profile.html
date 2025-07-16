@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Combat Chronicles - Profile</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      max-width: 500px;
+    }
+    nav a {
+      margin-right: 15px;
+      color: blue;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    #loginSection, #profileSection {
+      margin-top: 30px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="character-options.html">Character Options</a>
+    <a href="play.html">Play</a>
+    <a href="profile.html">Profile</a>
+  </nav>
+
+  <h1>Your Profile</h1>
+
+  <!-- Login Form -->
+  <div id="loginSection">
+    <p>Please log in to manage your profile.</p>
+    <form id="loginForm">
+      <label for="email">Email:</label>
+      <input type="email" id="email" required />
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" required />
+
+      <button type="submit" id="loginBtn">Log In</button>
+    </form>
+    <p>Don't have an account? <button id="signupBtn" style="cursor:pointer;">Sign Up</button></p>
+  </div>
+
+  <!-- Profile Info -->
+  <div id="profileSection" style="display:none;">
+    <p>Welcome, <strong><span id="userEmail"></span></strong>!</p>
+    <button id="logoutBtn">Log Out</button>
+  </div>
+
+  <script type="module">
+    import { auth } from "./firebase-config.js";
+    import { 
+      signInWithEmailAndPassword, 
+      signOut, 
+      onAuthStateChanged, 
+      createUserWithEmailAndPassword 
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+    const loginSection = document.getElementById("loginSection");
+    const profileSection = document.getElementById("profileSection");
+    const loginForm = document.getElementById("loginForm");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const userEmailSpan = document.getElementById("userEmail");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const signupBtn = document.getElementById("signupBtn");
+
+    // Handle login
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (error) {
+        alert("Login failed: " + error.message);
+      }
+    });
+
+    // Handle logout
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    // Handle sign up
+    signupBtn.addEventListener("click", async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      if (!email || !password) {
+        alert("Please enter email and password to sign up.");
+        return;
+      }
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("Account created! You are now logged in.");
+      } catch (error) {
+        alert("Sign up failed: " + error.message);
+      }
+    });
+
+    // Monitor auth state
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        loginSection.style.display = "none";
+        profileSection.style.display = "block";
+        userEmailSpan.textContent = user.email;
+        emailInput.value = "";
+        passwordInput.value = "";
+      } else {
+        loginSection.style.display = "block";
+        profileSection.style.display = "none";
+      }
+    });
+  </script>
+
+</body>
+</html>
