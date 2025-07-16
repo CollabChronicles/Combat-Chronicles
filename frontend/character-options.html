@@ -75,77 +75,75 @@
 
   <script type="module">
     import { db } from "./firebase-config.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-let currentCategory = "species";
-let currentData = [];
+    let currentCategory = "species";
+    let currentData = [];
 
-const resultsDiv = document.getElementById("results");
-const searchBar = document.getElementById("searchBar");
+    const resultsDiv = document.getElementById("results");
+    const searchBar = document.getElementById("searchBar");
 
-const cache = {
-  species: null,
-  occupation: null,
-  traits: null,
-};
+    const cache = {
+      species: null,
+      occupation: null,
+      traits: null,
+    };
 
-document.getElementById("speciesTab").addEventListener("click", () => setCategory("species"));
-document.getElementById("occupationsTab").addEventListener("click", () => setCategory("occupation"));
-document.getElementById("traitsTab").addEventListener("click", () => setCategory("traits"));
-searchBar.addEventListener("input", renderResults);
+    document.getElementById("speciesTab").addEventListener("click", () => setCategory("species"));
+    document.getElementById("occupationTab").addEventListener("click", () => setCategory("occupation"));
+    document.getElementById("traitsTab").addEventListener("click", () => setCategory("traits"));
+    searchBar.addEventListener("input", renderResults);
 
-async function setCategory(category) {
-  currentCategory = category;
+    async function setCategory(category) {
+      currentCategory = category;
 
-  document.querySelectorAll("#tabs button").forEach(btn => btn.classList.remove("active"));
-  document.getElementById(category + "Tab").classList.add("active");
+      document.querySelectorAll("#tabs button").forEach(btn => btn.classList.remove("active"));
+      document.getElementById(category + "Tab").classList.add("active");
 
-  searchBar.value = "";
-  resultsDiv.innerHTML = "<p>Loading...</p>";
+      searchBar.value = "";
+      resultsDiv.innerHTML = "<p>Loading...</p>";
 
-  if (cache[category]) {
-    currentData = cache[category];
-    renderResults();
-  } else {
-    try {
-      const snapshot = await getDocs(collection(db, category));
-      const items = [];
-      snapshot.forEach(doc => {
-        // Expect your documents to have at least: { name, description }
-        const data = doc.data();
-        items.push({
-          name: data.name || doc.id,
-          description: data.description || ""
-        });
-      });
-      cache[category] = items;
-      currentData = items;
-      renderResults();
-    } catch (error) {
-      resultsDiv.innerHTML = `<p style="color:red;">Error loading ${category}: ${error.message}</p>`;
+      if (cache[category]) {
+        currentData = cache[category];
+        renderResults();
+      } else {
+        try {
+          const snapshot = await getDocs(collection(db, category));
+          const items = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            items.push({
+              name: data.name || doc.id,
+              description: data.description || ""
+            });
+          });
+          cache[category] = items;
+          currentData = items;
+          renderResults();
+        } catch (error) {
+          resultsDiv.innerHTML = `<p style="color:red;">Error loading ${category}: ${error.message}</p>`;
+        }
+      }
     }
-  }
-}
 
-function renderResults() {
-  const query = searchBar.value.toLowerCase();
-  const filtered = currentData.filter(item =>
-    item.name.toLowerCase().includes(query) || item.description.toLowerCase().includes(query)
-  );
+    function renderResults() {
+      const query = searchBar.value.toLowerCase();
+      const filtered = currentData.filter(item =>
+        item.name.toLowerCase().includes(query) || item.description.toLowerCase().includes(query)
+      );
 
-  resultsDiv.innerHTML = filtered.length
-    ? filtered.map(item => `
-        <div class="item">
-          <h3>${item.name}</h3>
-          <p>${item.description}</p>
-        </div>
-      `).join("")
-    : "<p>No results found.</p>";
-}
+      resultsDiv.innerHTML = filtered.length
+        ? filtered.map(item => `
+            <div class="item">
+              <h3>${item.name}</h3>
+              <p>${item.description}</p>
+            </div>
+          `).join("")
+        : "<p>No results found.</p>";
+    }
 
-// Load species on initial page load
-setCategory("species");
-
+    // Load species on initial page load
+    setCategory("species");
   </script>
 </body>
 </html>
