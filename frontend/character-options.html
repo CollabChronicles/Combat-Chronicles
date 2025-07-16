@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Combat Chronicles - Character Options</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    header {
+      margin-bottom: 20px;
+    }
+    nav a {
+      margin-right: 15px;
+      text-decoration: none;
+      color: blue;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    #tabs button {
+      margin-right: 10px;
+      padding: 8px 16px;
+    }
+    #tabs button.active {
+      background-color: #007bff;
+      color: white;
+      border: none;
+    }
+    #searchBar {
+      margin: 15px 0;
+      width: 100%;
+      max-width: 400px;
+      padding: 8px;
+      font-size: 16px;
+    }
+    #results {
+      border-top: 1px solid #ccc;
+      margin-top: 20px;
+    }
+    .item {
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+    }
+    .item h3 {
+      margin: 0 0 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Combat Chronicles</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="character-options.html">Character Options</a>
+      <a href="play.html">Play</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Character Options</h2>
+    <div id="tabs">
+      <button id="speciesTab" class="active">Species</button>
+      <button id="occupationsTab">Occupations</button>
+      <button id="traitsTab">Traits</button>
+    </div>
+
+    <input type="text" id="searchBar" placeholder="Search...">
+
+    <div id="results"></div>
+  </main>
+
+  <script type="module">
+    import { db } from "./firebase-config.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+let currentCategory = "species";
+let currentData = [];
+
+const resultsDiv = document.getElementById("results");
+const searchBar = document.getElementById("searchBar");
+
+const cache = {
+  species: null,
+  occupations: null,
+  traits: null,
+};
+
+document.getElementById("speciesTab").addEventListener("click", () => setCategory("species"));
+document.getElementById("occupationsTab").addEventListener("click", () => setCategory("occupations"));
+document.getElementById("traitsTab").addEventListener("click", () => setCategory("traits"));
+searchBar.addEventListener("input", renderResults);
+
+async function setCategory(category) {
+  currentCategory = category;
+
+  document.querySelectorAll("#tabs button").forEach(btn => btn.classList.remove("active"));
+  document.getElementById(category + "Tab").classList.add("active");
+
+  searchBar.value = "";
+  resultsDiv.innerHTML = "<p>Loading...</p>";
+
+  if (cache[category]) {
+    currentData = cache[category];
+    renderResults();
+  } else {
+    try {
+      const snapshot = await getDocs(collection(db, category));
+      const items = [];
+      snapshot.forEach(doc => {
+        // Expect your documents to have at least: { name, description }
+        const data = doc.data();
+        items.push({
+          name: data.name || doc.id,
+          description: data.description || ""
+        });
+      });
+      cache[category] = items;
+      currentData = items;
+      renderResults();
+    } catch (error) {
+      resultsDiv.innerHTML = `<p style="color:red;">Error loading ${category}: ${error.message}</p>`;
+    }
+  }
+}
+
+function renderResults() {
+  const query = searchBar.value.toLowerCase();
+  const filtered = currentData.filter(item =>
+    item.name.toLowerCase().includes(query) || item.description.toLowerCase().includes(query)
+  );
+
+  resultsDiv.innerHTML = filtered.length
+    ? filtered.map(item => `
+        <div class="item">
+          <h3>${item.name}</h3>
+          <p>${item.description}</p>
+        </div>
+      `).join("")
+    : "<p>No results found.</p>";
+}
+
+// Load species on initial page load
+setCategory("species");
+
+  </script>
+</body>
+</html>
