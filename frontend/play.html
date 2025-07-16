@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Combat Chronicles - Play</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      max-width: 800px;
+    }
+    nav a {
+      margin-right: 15px;
+      color: blue;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    #userGreeting {
+      margin-bottom: 20px;
+    }
+    #gameArea {
+      border: 2px solid #444;
+      padding: 15px;
+      border-radius: 8px;
+      min-height: 300px;
+      background-color: #fafafa;
+    }
+    .notice {
+      font-style: italic;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="character-options.html">Character Options</a>
+    <a href="play.html">Play</a>
+    <a href="profile.html">Profile</a>
+  </nav>
+
+  <h1>Play Combat Chronicles</h1>
+
+  <div id="userGreeting" style="display:none;">
+    Welcome, <span id="userEmail"></span>! Ready to enter the arena?
+  </div>
+
+  <div id="gameArea">
+    <p class="notice">Game features coming soon! Select your character and engage in chaotic battles.</p>
+  </div>
+
+  <script type="module">
+    import { auth } from "./firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+    const userGreeting = document.getElementById("userGreeting");
+    const userEmailSpan = document.getElementById("userEmail");
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userGreeting.style.display = "block";
+        userEmailSpan.textContent = user.email;
+      } else {
+        userGreeting.style.display = "none";
+      }
+    });
+  </script>
+
+</body>
+</html>
